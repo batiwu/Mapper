@@ -3,7 +3,8 @@ drop table country if exists;
 create table country (
   id integer NOT NULL PRIMARY KEY,
   countryname varchar(32),
-  countrycode varchar(2) DEFAULT 'HH'
+  countrycode varchar(2) DEFAULT 'HH',
+  version INTEGER
 );
 
 create table country2 (
