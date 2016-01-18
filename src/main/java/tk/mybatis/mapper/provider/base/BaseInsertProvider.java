@@ -121,6 +121,8 @@ public class BaseInsertProvider extends MapperTemplate {
                 sql.append(SqlHelper.getIfCacheIsNull(column, column.getColumnHolder() + ","));
             } else if (column.isUuid()) {
                 sql.append(SqlHelper.getIfIsNull(column, column.getColumnHolder(null, "_bind", ","), isNotEmpty()));
+            } else if (column.isVersion()) {
+                sql.append(0);
             } else {
                 //当null的时候，如果不指定jdbcType，oracle可能会报异常，指定VARCHAR不影响其他
                 sql.append(SqlHelper.getIfIsNull(column, column.getColumnHolder(null, null, ","), isNotEmpty()));
@@ -195,8 +197,8 @@ public class BaseInsertProvider extends MapperTemplate {
             if (!column.isInsertable()) {
                 continue;
             }
-            if (StringUtil.isNotEmpty(column.getSequenceName()) || column.isIdentity() || column.isUuid()) {
-                sql.append(column.getColumn() + ",");
+            if (StringUtil.isNotEmpty(column.getSequenceName()) || column.isIdentity() || column.isUuid() || column.isVersion()) {
+                sql.append(column.getColumn()).append(",");
             } else {
                 sql.append(SqlHelper.getIfNotNull(column, column.getColumn() + ",", isNotEmpty()));
             }
@@ -211,6 +213,8 @@ public class BaseInsertProvider extends MapperTemplate {
             //自增的情况下,如果默认有值,就会备份到property_cache中,所以这里需要先判断备份的值是否存在
             if (column.isIdentity()) {
                 sql.append(SqlHelper.getIfCacheNotNull(column, column.getColumnHolder(null, "_cache", ",")));
+            } else if (column.isVersion()) {
+                sql.append("0,");
             } else {
                 //其他情况值仍然存在原property中
                 sql.append(SqlHelper.getIfNotNull(column, column.getColumnHolder(null, null, ","), isNotEmpty()));

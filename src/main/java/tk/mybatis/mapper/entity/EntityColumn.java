@@ -51,6 +51,8 @@ public class EntityColumn {
     private boolean insertable = true;
     //可更新
     private boolean updatable = true;
+    //version字段
+    private boolean version = false;
 
     public EntityColumn() {
     }
@@ -169,6 +171,14 @@ public class EntityColumn {
 
     public void setUpdatable(boolean updatable) {
         this.updatable = updatable;
+    }
+
+    public boolean isVersion() {
+        return version;
+    }
+
+    public void setVersion(boolean version) {
+        this.version = version;
     }
 
     /**

@@ -50,6 +50,8 @@ public class EntityTable {
     private Set<EntityColumn> entityClassColumns;
     //实体类 => 主键信息
     private Set<EntityColumn> entityClassPKColumns;
+    //实体类 => 乐观锁字段
+    private Set<EntityColumn> entityClassVersionColumns;
     //useGenerator包含多列的时候需要用到
     private List<String> keyProperties;
     private List<String> keyColumns;
@@ -144,6 +146,14 @@ public class EntityTable {
 
     public void setEntityClassPKColumns(Set<EntityColumn> entityClassPKColumns) {
         this.entityClassPKColumns = entityClassPKColumns;
+    }
+
+    public Set<EntityColumn> getEntityClassVersionColumns() {
+        return entityClassVersionColumns;
+    }
+
+    public void setEntityClassVersionColumns(Set<EntityColumn> entityClassVersionColumns) {
+        this.entityClassVersionColumns = entityClassVersionColumns;
     }
 
     public String[] getKeyProperties() {

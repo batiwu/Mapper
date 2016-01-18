@@ -31,6 +31,7 @@ import tk.mybatis.mapper.typehandler.StringType2Handler;
 
 import javax.persistence.Column;
 import javax.persistence.Transient;
+import javax.persistence.Version;
 import java.io.Serializable;
 
 /**
@@ -45,6 +46,8 @@ public class Country extends Entity<Integer, String> implements Serializable, ID
     @ColumnType(jdbcType = JdbcType.VARCHAR, typeHandler = StringType2Handler.class)
     private String countryname;
     private String countrycode;
+    @Version
+    private Integer version;
 
     @Transient
     private String dynamicTableName123;
@@ -63,6 +66,14 @@ public class Country extends Entity<Integer, String> implements Serializable, ID
 
     public void setCountrycode(String countrycode) {
         this.countrycode = countrycode;
+    }
+
+    public Integer getVersion() {
+        return version;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
     }
 
     @Override

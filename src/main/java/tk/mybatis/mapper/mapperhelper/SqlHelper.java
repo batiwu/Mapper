@@ -345,10 +345,14 @@ public class SqlHelper {
             if (skipId && column.isId()) {
                 continue;
             }
+            if (column.isVersion()) {
+                sql.append(column.getColumn()).append(",");
+                continue;
+            }
             if (notNull) {
                 sql.append(SqlHelper.getIfNotNull(column, column.getColumn() + ",", notEmpty));
             } else {
-                sql.append(column.getColumn() + ",");
+                sql.append(column.getColumn()).append(",");
             }
         }
         sql.append("</trim>");
@@ -377,10 +381,14 @@ public class SqlHelper {
             if (skipId && column.isId()) {
                 continue;
             }
+            if (column.isVersion()) {
+                sql.append(column.getColumn()).append(",");
+                continue;
+            }
             if (notNull) {
                 sql.append(SqlHelper.getIfNotNull(column, column.getColumnHolder() + ",", notEmpty));
             } else {
-                sql.append(column.getColumnHolder() + ",");
+                sql.append(column.getColumnHolder()).append(",");
             }
         }
         sql.append("</trim>");
@@ -403,12 +411,15 @@ public class SqlHelper {
         Set<EntityColumn> columnList = EntityHelper.getColumns(entityClass);
         //当某个列有主键策略时，不需要考虑他的属性是否为空，因为如果为空，一定会根据主键策略给他生成一个值
         for (EntityColumn column : columnList) {
-            if (!column.isId() && column.isUpdatable()) {
+            if (!column.isId() && column.isUpdatable() && !column.isVersion()) {
                 if (notNull) {
                     sql.append(SqlHelper.getIfNotNull(entityName, column, column.getColumnEqualsHolder(entityName) + ",", notEmpty));
                 } else {
-                    sql.append(column.getColumnEqualsHolder(entityName) + ",");
+                    sql.append(column.getColumnEqualsHolder(entityName)).append(",");
                 }
+            }
+            if (column.isVersion()) {
+                sql.append(column.getColumn()).append(" = ").append(column.getColumn()).append("+1");
             }
         }
         sql.append("</set>");
@@ -428,7 +439,28 @@ public class SqlHelper {
         Set<EntityColumn> columnList = EntityHelper.getPKColumns(entityClass);
         //当某个列有主键策略时，不需要考虑他的属性是否为空，因为如果为空，一定会根据主键策略给他生成一个值
         for (EntityColumn column : columnList) {
-            sql.append(" AND " + column.getColumnEqualsHolder());
+            sql.append(" AND ").append(column.getColumnEqualsHolder());
+        }
+        sql.append("</where>");
+        return sql.toString();
+    }
+
+    /**
+     * where主键和version条件
+     *
+     * @param entityClass
+     * @return
+     */
+    public static String wherePKAndVersionColumns(Class<?> entityClass) {
+        StringBuilder sql = new StringBuilder();
+        sql.append("<where>");
+        //获取全部列
+        Set<EntityColumn> columnList = EntityHelper.getPKColumns(entityClass);
+        Set<EntityColumn> versionColumnList = EntityHelper.getVersionColumns(entityClass);
+        columnList.addAll(versionColumnList);
+        //当某个列有主键策略时，不需要考虑他的属性是否为空，因为如果为空，一定会根据主键策略给他生成一个值
+        for (EntityColumn column : columnList) {
+            sql.append(" AND ").append(column.getColumnEqualsHolder());
         }
         sql.append("</where>");
         return sql.toString();
@@ -501,7 +533,7 @@ public class SqlHelper {
         String orderByClause = EntityHelper.getOrderByClause(entityClass);
         if (orderByClause.length() > 0) {
             sql.append("<if test=\"orderByClause == null\">");
-            sql.append("ORDER BY " + orderByClause);
+            sql.append("ORDER BY ").append(orderByClause);
             sql.append("</if>");
         }
         return sql.toString();

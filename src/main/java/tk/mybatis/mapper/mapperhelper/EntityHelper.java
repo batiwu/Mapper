@@ -112,6 +112,16 @@ public class EntityHelper {
     }
 
     /**
+     * 获取version字段
+     *
+     * @param entityClass
+     * @return
+     */
+    public static Set<EntityColumn> getVersionColumns(Class<?> entityClass) {
+        return getEntityTable(entityClass).getEntityClassVersionColumns();
+    }
+
+    /**
      * 获取查询的Select
      *
      * @param entityClass
@@ -209,6 +219,7 @@ public class EntityHelper {
         }
         entityTable.setEntityClassColumns(new LinkedHashSet<EntityColumn>());
         entityTable.setEntityClassPKColumns(new LinkedHashSet<EntityColumn>());
+        entityTable.setEntityClassVersionColumns(new LinkedHashSet<EntityColumn>());
         //处理所有列
         List<EntityField> fields = null;
         if (config.isEnableMethodAnnotation()) {
@@ -321,6 +332,15 @@ public class EntityHelper {
                             "\n3.类似mysql数据库的@GeneratedValue(strategy=GenerationType.IDENTITY[,generator=\"Mysql\"])");
                 }
             }
+        }
+        //version字段
+        if (field.isAnnotationPresent(Version.class)) {
+            System.out.println(field.getJavaType());
+            if (!Number.class.isAssignableFrom(field.getJavaType())) {
+                throw new RuntimeException(field.getName() + " - this column must be Number for @Version!");
+            }
+            entityColumn.setVersion(true);
+            entityTable.getEntityClassVersionColumns().add(entityColumn);
         }
         entityTable.getEntityClassColumns().add(entityColumn);
         if (entityColumn.isId()) {
