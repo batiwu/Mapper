@@ -122,7 +122,7 @@ public class BaseInsertProvider extends MapperTemplate {
             } else if (column.isUuid()) {
                 sql.append(SqlHelper.getIfIsNull(column, column.getColumnHolder(null, "_bind", ","), isNotEmpty()));
             } else if (column.isVersion()) {
-                sql.append(0);
+                sql.append("0,");
             } else {
                 //当null的时候，如果不指定jdbcType，oracle可能会报异常，指定VARCHAR不影响其他
                 sql.append(SqlHelper.getIfIsNull(column, column.getColumnHolder(null, null, ","), isNotEmpty()));

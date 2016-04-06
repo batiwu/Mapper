@@ -25,6 +25,7 @@
 package tk.mybatis.mapper.model;
 
 import javax.persistence.Id;
+import javax.persistence.Version;
 
 /**
  * Description: Country
@@ -32,10 +33,14 @@ import javax.persistence.Id;
  * Update: liuzh(2014-06-06 13:38)
  */
 public class Country2 {
+
+
     @Id
     private Integer id;
     private String countryname;
     private String countrycode;
+    @Version
+    private Integer version;
 
     public Integer getId() {
         return id;
@@ -59,6 +64,14 @@ public class Country2 {
 
     public void setCountrycode(String countrycode) {
         this.countrycode = countrycode;
+    }
+
+    public Integer getVersion() {
+        return version;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
     }
 
     @Override

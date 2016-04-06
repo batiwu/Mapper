@@ -335,7 +335,6 @@ public class EntityHelper {
         }
         //version字段
         if (field.isAnnotationPresent(Version.class)) {
-            System.out.println(field.getJavaType());
             if (!Number.class.isAssignableFrom(field.getJavaType())) {
                 throw new RuntimeException(field.getName() + " - this column must be Number for @Version!");
             }

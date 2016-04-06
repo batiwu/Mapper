@@ -419,7 +419,7 @@ public class SqlHelper {
                 }
             }
             if (column.isVersion()) {
-                sql.append(column.getColumn()).append(" = ").append(column.getColumn()).append("+1");
+                sql.append(column.getColumn()).append(" = ").append(column.getColumn()).append("+1,");
             }
         }
         sql.append("</set>");
